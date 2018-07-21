@@ -35,10 +35,14 @@ func (i *AppleIcon) Print() {
 	fmt.Printf("Header Magic: %s\n", i.Header.Magic)
 	fmt.Printf("Header Length: %d\n", i.Header.Length)
 	fmt.Println("[Icons]")
+}
+
+// ExtractIcon helps exporting a single file from the Apple Icon
+func (i *AppleIcon) ExtractIcon(id, filename string) {
 	for i, icon := range i.Icons {
 		fmt.Printf("%d - %s - Len: %d\n", i, icon.Type, icon.Length)
-		if icon.TypeStr() == "ic09" {
-			ioutil.WriteFile("icone.jpg", icon.Data, 0666)
+		if icon.TypeStr() == id {
+			ioutil.WriteFile(filename, icon.Data, 0666)
 		}
 	}
 }
@@ -52,6 +56,8 @@ func ReadAppleIcon(r *bytes.Reader) (*AppleIcon, error) {
 	// We have to iterate until end of the file
 	for {
 		var icon IconData
+
+		// Start reading 4 bytes
 		err := binary.Read(r, binary.LittleEndian, &icon.Type)
 
 		if err != nil {
@@ -61,13 +67,19 @@ func ReadAppleIcon(r *bytes.Reader) (*AppleIcon, error) {
 			return nil, fmt.Errorf("error reading icons: %s", err)
 		}
 
+		// Reading more 4 bytes
 		binary.Read(r, binary.BigEndian, &icon.Length)
-		fmt.Printf("%d\n", icon.Length)
+
+		// The size of the data is less the prior 8 bytes read
+		// We dynamically create a space for the data that will be read with the size that we need
 		data := make([]byte, icon.Length-8)
+
 		binary.Read(r, binary.BigEndian, data)
+
 		w := bytes.Buffer{}
 		w.Write(data)
 		icon.Data = w.Bytes()
+
 		icns.Icons = append(icns.Icons, icon)
 	}
 
@@ -87,5 +99,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	// Dump Information
 	icon.Print()
+
+	// I already know that there is these images inside the Icon
+	icon.ExtractIcon("ic09", "ic09.jpeg")
+	icon.ExtractIcon("ic10", "ic10.jpeg")
 }
