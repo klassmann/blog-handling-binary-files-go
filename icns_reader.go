@@ -35,12 +35,14 @@ func (i *AppleIcon) Print() {
 	fmt.Printf("Header Magic: %s\n", i.Header.Magic)
 	fmt.Printf("Header Length: %d\n", i.Header.Length)
 	fmt.Println("[Icons]")
+	for i, icon := range i.Icons {
+		fmt.Printf("%d - %s - Len: %d\n", i, icon.Type, icon.Length)
+	}
 }
 
 // ExtractIcon helps exporting a single file from the Apple Icon
 func (i *AppleIcon) ExtractIcon(id, filename string) {
-	for i, icon := range i.Icons {
-		fmt.Printf("%d - %s - Len: %d\n", i, icon.Type, icon.Length)
+	for _, icon := range i.Icons {
 		if icon.TypeStr() == id {
 			ioutil.WriteFile(filename, icon.Data, 0666)
 		}
