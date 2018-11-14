@@ -1,17 +1,17 @@
-# Blog Post - Processing Binary Files in Go
+# Blog Post - Handling Binary Files in Go
 
-This repository contains examples about a post in my blog.
+This repository contains examples from a [blog post](https://lucasklassmann.com/blog/2018-07-21-handling-binary-files-in-go/).
 
 ## Requirements
 
-- [Go](http://golang.org)
+- [Go](http://golang.org) (tested with Go 1.10.3)
 
 ## How to Use
 
 Start cloning this repository inside your Go Workspace:
 
 ```sh
-git clone https://github.com/klassmann/blog-binary-files-go.git
+git clone https://github.com/klassmann/blog-handling-binary-files-go.git
 ```
 
 You can run directly the file:
